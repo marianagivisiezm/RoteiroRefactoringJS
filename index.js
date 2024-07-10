@@ -53,6 +53,7 @@ function gerarFaturaStr(fatura, pecas) {
     return totalFatura
   }
 
+  
   let faturaStr = `Fatura ${fatura.cliente}\n`;
   for (let apre of fatura.apresentacoes) {
     faturaStr += `  ${getPeca(apre).nome}: ${formatarMoeda(calcularTotalApresentacao(apre, getPeca(apre)))} (${apre.audiencia} assentos)\n`;
