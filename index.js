@@ -36,14 +36,14 @@ function calcularTotalApresentacao(apre, peca) {
 function getPeca(apresentacao) {
   return pecas[apresentacao.id];
 }  
-function calcularTotalCreditos(){
+function calcularTotalCreditos(fatura){
   let creditos = 0;
   for (let apre of fatura.apresentacoes) {
     creditos += calcularCredito(apre)
   }
   return creditos
 }
-function calcularTotalFatura(){
+function calcularTotalFatura(fatura){
   let totalFatura = 0;
   for (let apre of fatura.apresentacoes) {
     totalFatura += calcularTotalApresentacao(apre, getPeca(apre));
@@ -51,20 +51,30 @@ function calcularTotalFatura(){
   return totalFatura
 }
 
-function gerarFaturaStr(fatura, pecas) {
+function gerarFaturaStr(fatura) {
 
   let faturaStr = `Fatura ${fatura.cliente}\n`;
   for (let apre of fatura.apresentacoes) {
     faturaStr += `  ${getPeca(apre).nome}: ${formatarMoeda(calcularTotalApresentacao(apre, getPeca(apre)))} (${apre.audiencia} assentos)\n`;
   }
 
-  faturaStr += `Valor total: ${formatarMoeda(calcularTotalFatura())}\n`;
-  faturaStr += `Créditos acumulados: ${calcularTotalCreditos()} \n`;
+  faturaStr += `Valor total: ${formatarMoeda(calcularTotalFatura(fatura))}\n`;
+  faturaStr += `Créditos acumulados: ${calcularTotalCreditos(fatura)} \n`;
   return faturaStr;
 
-}          
+}    
+
+// function gerarFaturaHTML(fatura, pecas) {
+//   let faturaHTML = `<html>\n<p> Fatura ${fatura.cliente} </p>\n<ul>\n`
+//   for (let apre of fatura.apresentacoes) {
+//     faturaHTML += ` <li> ${getPeca(apre).nome}: ${formatarMoeda(calcularTotalApresentacao(apre, getPeca(apre)))} (${apre.audiencia} assentos) <li>\n`;
+//   }
+//   faturaHTML += `</ul>\n<p> Valor total: ${formatarMoeda(calcularTotalFatura())}<p>\n`
+//   faturaHTML += `<p> Créditos acumulados: ${calcularTotalCreditos()} \n </p>\n</html>`
+
+// }
 
 const faturas = JSON.parse(readFileSync('./faturas.json'));
 const pecas = JSON.parse(readFileSync('./pecas.json'));
-const faturaStr = gerarFaturaStr(faturas, pecas);
+const faturaStr = gerarFaturaStr(faturas);
 console.log(faturaStr);
